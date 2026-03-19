@@ -235,46 +235,90 @@ response time, body snippet, anomaly list, result verdict, and consistency data.
 
 ---
 
-### Our corrected and improved version
-
-Key fixes applied in `src/verify_deserial.py`:
-
+## Our corrected and improved version
+ 
+We rewrote the function to address all seven problems. Key improvements:
+ 
+**Error handling:**
 ```python
-# Fix 1 — Error handling
 try:
     response = requests.post(target, data=raw_bytes,
-                             headers={"Content-Type": content_type}, timeout=15)
+                             headers={"Content-Type": content_type},
+                             timeout=15)
     elapsed = round(time.time() - start, 3)
+    status_code = response.status_code
 except requests.RequestException as e:
+    elapsed = round(time.time() - start, 3)
     return {"status_code": 0, "error": str(e), "response_time": elapsed, ...}
-
-# Fix 2 — Timing anomaly
+```
+ 
+**Timing anomaly detection:**
+```python
+start = time.time()
+response = requests.post(...)
+elapsed = round(time.time() - start, 3)
+ 
 if elapsed > 5.0:
-    anomalies.append(f"TEMPORAL: {elapsed}s exceeds 5s threshold")
-
-# Fix 3 — Behavioral anomaly
+    anomalies.append(
+        f"TEMPORAL: response time {elapsed}s exceeds 5s threshold "
+        f"— deserialization likely triggered"
+    )
+```
+ 
+**Behavioral anomaly check:**
+```python
 if status_code != expected_code and status_code != 0:
-    anomalies.append(f"BEHAVIORAL: status {status_code} (expected {expected_code})")
-
-# Fix 4 — Encoding validation
+    anomalies.append(
+        f"BEHAVIORAL: status {status_code} (expected {expected_code})"
+    )
+```
+ 
+**Encoding validation with proper error raising:**
+```python
 def decode_payload(encoding, data):
-    if encoding == "hex":   return bytes.fromhex(data)
-    elif encoding == "base64": return base64.b64decode(data)
-    else: raise ValueError(f"Unknown encoding: {encoding}")
-
-# Fix 5+6 — Retry + consistency engine (Bonus B)
-def run_with_retry(..., retries=3):
-    results = [run_single_test(...) for _ in range(retries)]
-    failures = len([r for r in results if is_fail(r)])
-    flag = "CONSISTENT_PASS" if failures == 0 else \
-           "CONSISTENT_FAIL" if failures == retries else \
-           "INCONSISTENT - FLAG FOR REVIEW"
-
-# Fix 7 — Full result schema
+    if encoding == "hex":
+        return bytes.fromhex(data)
+    elif encoding == "base64":
+        return base64.b64decode(data)
+    else:
+        raise ValueError(f"Unknown encoding: {encoding}. Use hex or base64.")
+```
+ 
+**Retry and consistency engine (Bonus B):**
+```python
+def run_with_retry(target, content_type, raw_bytes, oob_poll_url,
+                   expected_code, retries=3, description=""):
+    results = []
+    for i in range(retries):
+        r = run_single_test(...)
+        results.append(r)
+        if i < retries - 1:
+            time.sleep(1)
+ 
+    failure_runs = [r for r in results if is_fail(r)]
+    score = f"{len(failure_runs)}/{retries}"
+ 
+    if len(failure_runs) == 0:
+        flag = "CONSISTENT_PASS"
+    elif len(failure_runs) == retries:
+        flag = "CONSISTENT_FAIL"
+    else:
+        flag = "INCONSISTENT - FLAG FOR REVIEW"
+```
+ 
+**Full result schema matching the spec:**
+```python
 tc = {
-    "test_id", "description", "encoding", "status_code",
-    "response_time", "body_snippet", "oob_hit",
-    "anomalies", "result", "consistency"
+    "test_id"      : payload["id"],
+    "description"  : payload["description"],
+    "encoding"     : payload["encoding"],
+    "status_code"  : result["status_code"],
+    "response_time": result["response_time"],
+    "body_snippet" : result["body_snippet"],
+    "oob_hit"      : result["oob_hit"],
+    "anomalies"    : anomalies,
+    "result"       : tc_result,     # PASS / FAIL / INCONCLUSIVE
+    "consistency"  : consistency    # {runs, failures, score, flag}
 }
 ```
 
