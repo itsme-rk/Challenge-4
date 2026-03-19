@@ -1,0 +1,138 @@
+{
+  "report_id": "dae0040c-b3d8-4826-8f3c-230801ab3d30",
+  "finding_id": "FIND-0139",
+  "generated_at": "2026-03-19T12:41:49.412830+00:00",
+  "engine_version": "0.1.0",
+  "verdict": "REMEDIATION_FAILED",
+  "test_results": [
+    {
+      "test_id": "TC-01",
+      "description": "CommonsCollections6 gadget chain",
+      "encoding": "hex",
+      "status_code": 200,
+      "response_time": 6.011,
+      "body_snippet": "{\"message\":\"object processed\",\"status\":\"deserialized\",\"timestamp\":\"2026-03-19T12:40:38.544891+00:00\"}\n",
+      "oob_hit": false,
+      "anomalies": [
+        "BEHAVIORAL: status 200 (expected 400)",
+        "TEMPORAL: response time 6.011s exceeds 5s threshold \u2014 deserialization likely triggered"
+      ],
+      "result": "FAIL",
+      "consistency": {
+        "runs": 3,
+        "failures": 3,
+        "score": "3/3",
+        "flag": "CONSISTENT_FAIL",
+        "all_response_times": [
+          6.011,
+          6.007,
+          6.008
+        ],
+        "all_status_codes": [
+          200,
+          200,
+          200
+        ]
+      }
+    },
+    {
+      "test_id": "TC-02",
+      "description": "Benign serialized object (control)",
+      "encoding": "base64",
+      "status_code": 200,
+      "response_time": 0.005,
+      "body_snippet": "{\"message\":\"valid object processed\",\"status\":\"accepted\",\"timestamp\":\"2026-03-19T12:41:04.570230+00:00\"}\n",
+      "oob_hit": false,
+      "anomalies": [],
+      "result": "PASS",
+      "consistency": {
+        "runs": 3,
+        "failures": 0,
+        "score": "0/3",
+        "flag": "CONSISTENT_PASS",
+        "all_response_times": [
+          0.005,
+          0.006,
+          0.006
+        ],
+        "all_status_codes": [
+          200,
+          200,
+          200
+        ]
+      }
+    },
+    {
+      "test_id": "TC-03",
+      "description": "Invalid magic bytes",
+      "encoding": "hex",
+      "status_code": 400,
+      "response_time": 0.005,
+      "body_snippet": "{\"reason\":\"invalid_magic_bytes\",\"status\":\"rejected\",\"timestamp\":\"2026-03-19T12:41:12.592044+00:00\"}\n",
+      "oob_hit": false,
+      "anomalies": [],
+      "result": "PASS",
+      "consistency": {
+        "runs": 3,
+        "failures": 0,
+        "score": "0/3",
+        "flag": "CONSISTENT_PASS",
+        "all_response_times": [
+          0.005,
+          0.005,
+          0.006
+        ],
+        "all_status_codes": [
+          400,
+          400,
+          400
+        ]
+      }
+    },
+    {
+      "test_id": "TC-04",
+      "description": "Spring gadget chain",
+      "encoding": "hex",
+      "status_code": 200,
+      "response_time": 6.008,
+      "body_snippet": "{\"message\":\"object processed\",\"status\":\"deserialized\",\"timestamp\":\"2026-03-19T12:41:20.609885+00:00\"}\n",
+      "oob_hit": false,
+      "anomalies": [
+        "BEHAVIORAL: status 200 (expected 400)",
+        "TEMPORAL: response time 6.008s exceeds 5s threshold \u2014 deserialization likely triggered"
+      ],
+      "result": "FAIL",
+      "consistency": {
+        "runs": 3,
+        "failures": 3,
+        "score": "3/3",
+        "flag": "CONSISTENT_FAIL",
+        "all_response_times": [
+          6.008,
+          6.007,
+          6.007
+        ],
+        "all_status_codes": [
+          200,
+          200,
+          200
+        ]
+      }
+    }
+  ],
+  "ai_analysis": {
+    "status": "completed",
+    "model": "llama-3.1-8b-instant via Groq",
+    "prompt": "You are a security analysis assistant reviewing automated remediation verification results.\n\nFinding ID: FIND-0139\nVulnerability type: Insecure Java Deserialization\nDeterministic verdict from test engine: REMEDIATION_FAILED\n\nTest results:\n- TC-01 (CommonsCollections6 gadget chain): status=200, time=6.011s, result=FAIL, consistency=3/3 (CONSISTENT_FAIL), anomalies=[BEHAVIORAL: status 200 (expected 400); TEMPORAL: response time 6.011s exceeds 5s threshold \u2014 deserialization likely triggered]\n- TC-02 (Benign serialized object (control)): status=200, time=0.005s, result=PASS, consistency=0/3 (CONSISTENT_PASS), anomalies=[none]\n- TC-03 (Invalid magic bytes): status=400, time=0.005s, result=PASS, consistency=0/3 (CONSISTENT_PASS), anomalies=[none]\n- TC-04 (Spring gadget chain): status=200, time=6.008s, result=FAIL, consistency=3/3 (CONSISTENT_FAIL), anomalies=[BEHAVIORAL: status 200 (expected 400); TEMPORAL: response time 6.008s exceeds 5s threshold \u2014 deserialization likely triggered]\n\nProvide an advisory analysis covering:\n1. Whether the fix appears complete, partial, or bypassed\n2. Which specific test results are most significant and why\n3. Any residual risk even if verdict is REMEDIATION_VERIFIED\n4. Recommended next steps for the security team\n\nImportant: Your analysis is advisory only. Do not contradict or attempt to override the deterministic verdict. Keep your response under 200 words.",
+    "analysis": "**Advisory Analysis: FIND-0139**\n\n**1. Fix completeness:** The remediation appears to be partial, as two test cases (TC-01 and TC-04) still trigger the vulnerability, while TC-02 and TC-03 pass as expected.\n\n**2. Most significant test results:** TC-01 and TC-04 are the most significant, as they both demonstrate the exploitation of the Insecure Java Deserialization vulnerability using different gadget chains. The behavioral anomalies (status 200 instead of 400) and temporal anomalies (exceeding the 5s threshold) further indicate that the deserialization is likely triggered.\n\n**3. Residual risk:** Although the remediation is partially successful, the presence of two failing test cases indicates that the vulnerability is still exploitable. This residual risk may be mitigated by further analysis and testing.\n\n**4. Recommended next steps:** The security team should investigate the root cause of the partial remediation and perform additional testing to ensure the vulnerability is fully addressed. This may involve reviewing the remediation implementation, testing additional test cases, and potentially re-scanning the application for the vulnerability.",
+    "advisory_only": true,
+    "note": "This analysis does not override the deterministic verdict"
+  },
+  "summary": {
+    "total": 4,
+    "passed": 2,
+    "failed": 2,
+    "inconclusive": 0
+  },
+  "report_hash": "sha256:8fb69c6992693875a887b2edbb51e6a94f5c617a06808b242f253a9688463f83"
+}

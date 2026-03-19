@@ -1,0 +1,132 @@
+{
+  "report_id": "44ec9716-adae-4228-bce8-11dcee9a9093",
+  "finding_id": "FIND-0139",
+  "generated_at": "2026-03-18T10:58:08.353713+00:00",
+  "engine_version": "0.1.0",
+  "verdict": "REMEDIATION_VERIFIED",
+  "test_results": [
+    {
+      "test_id": "TC-01",
+      "description": "CommonsCollections6 gadget chain",
+      "encoding": "hex",
+      "status_code": 400,
+      "response_time": 0.008,
+      "body_snippet": "{\"reason\":\"class_not_in_allowlist\",\"status\":\"rejected\",\"timestamp\":\"2026-03-18T10:57:34.543001+00:00\"}\n",
+      "oob_hit": false,
+      "anomalies": [],
+      "result": "PASS",
+      "consistency": {
+        "runs": 3,
+        "failures": 0,
+        "score": "0/3",
+        "flag": "CONSISTENT_PASS",
+        "all_response_times": [
+          0.008,
+          0.006,
+          0.003
+        ],
+        "all_status_codes": [
+          400,
+          400,
+          400
+        ]
+      }
+    },
+    {
+      "test_id": "TC-02",
+      "description": "Benign serialized object (control)",
+      "encoding": "base64",
+      "status_code": 200,
+      "response_time": 0.005,
+      "body_snippet": "{\"message\":\"valid object processed\",\"status\":\"accepted\",\"timestamp\":\"2026-03-18T10:57:42.559834+00:00\"}\n",
+      "oob_hit": false,
+      "anomalies": [],
+      "result": "PASS",
+      "consistency": {
+        "runs": 3,
+        "failures": 0,
+        "score": "0/3",
+        "flag": "CONSISTENT_PASS",
+        "all_response_times": [
+          0.005,
+          0.005,
+          0.005
+        ],
+        "all_status_codes": [
+          200,
+          200,
+          200
+        ]
+      }
+    },
+    {
+      "test_id": "TC-03",
+      "description": "Invalid magic bytes",
+      "encoding": "hex",
+      "status_code": 400,
+      "response_time": 0.005,
+      "body_snippet": "{\"reason\":\"invalid_magic_bytes\",\"status\":\"rejected\",\"timestamp\":\"2026-03-18T10:57:50.577717+00:00\"}\n",
+      "oob_hit": false,
+      "anomalies": [],
+      "result": "PASS",
+      "consistency": {
+        "runs": 3,
+        "failures": 0,
+        "score": "0/3",
+        "flag": "CONSISTENT_PASS",
+        "all_response_times": [
+          0.005,
+          0.006,
+          0.005
+        ],
+        "all_status_codes": [
+          400,
+          400,
+          400
+        ]
+      }
+    },
+    {
+      "test_id": "TC-04",
+      "description": "Spring gadget chain",
+      "encoding": "hex",
+      "status_code": 400,
+      "response_time": 0.006,
+      "body_snippet": "{\"reason\":\"class_not_in_allowlist\",\"status\":\"rejected\",\"timestamp\":\"2026-03-18T10:57:58.595684+00:00\"}\n",
+      "oob_hit": false,
+      "anomalies": [],
+      "result": "PASS",
+      "consistency": {
+        "runs": 3,
+        "failures": 0,
+        "score": "0/3",
+        "flag": "CONSISTENT_PASS",
+        "all_response_times": [
+          0.006,
+          0.006,
+          0.006
+        ],
+        "all_status_codes": [
+          400,
+          400,
+          400
+        ]
+      }
+    }
+  ],
+  "ai_analysis": {
+    "status": "completed",
+    "model": "llama-3.1-8b-instant via Groq",
+    "prompt": "You are a security analysis assistant reviewing automated remediation verification results.\n\nFinding ID: FIND-0139\nVulnerability type: Insecure Java Deserialization\nDeterministic verdict from test engine: REMEDIATION_VERIFIED\n\nTest results:\n- TC-01 (CommonsCollections6 gadget chain): status=400, time=0.008s, result=PASS, consistency=0/3 (CONSISTENT_PASS), anomalies=[none]\n- TC-02 (Benign serialized object (control)): status=200, time=0.005s, result=PASS, consistency=0/3 (CONSISTENT_PASS), anomalies=[none]\n- TC-03 (Invalid magic bytes): status=400, time=0.005s, result=PASS, consistency=0/3 (CONSISTENT_PASS), anomalies=[none]\n- TC-04 (Spring gadget chain): status=400, time=0.006s, result=PASS, consistency=0/3 (CONSISTENT_PASS), anomalies=[none]\n\nProvide an advisory analysis covering:\n1. Whether the fix appears complete, partial, or bypassed\n2. Which specific test results are most significant and why\n3. Any residual risk even if verdict is REMEDIATION_VERIFIED\n4. Recommended next steps for the security team\n\nImportant: Your analysis is advisory only. Do not contradict or attempt to override the deterministic verdict. Keep your response under 200 words.",
+    "analysis": "**Advisory Analysis: FIND-0139**\n\n**1. Fix completeness:** The remediation appears to be complete, as all test cases (TC-01 to TC-04) resulted in a PASS status with no anomalies. The consistent pass results across all test cases indicate that the fix has successfully mitigated the Insecure Java Deserialization vulnerability.\n\n**2. Significant test results:** TC-01 (CommonsCollections6 gadget chain) and TC-04 (Spring gadget chain) are the most significant test results. These test cases specifically target the vulnerability by attempting to exploit the gadget chains. The PASS status for these test cases suggests that the remediation has successfully blocked these exploit attempts.\n\n**3. Residual risk:** Although the remediation appears complete, there may be residual risk due to the complexity of Java deserialization attacks. New or unknown gadget chains may still be exploitable, and the remediation may not cover all possible attack vectors.\n\n**4. Recommended next steps:** The security team should continue to monitor the application for any new or emerging Java deserialization vulnerabilities. Regular security testing and vulnerability scanning can help identify any potential issues and ensure the remediation remains effective.",
+    "advisory_only": true,
+    "note": "This analysis does not override the deterministic verdict"
+  },
+  "summary": {
+    "total": 4,
+    "passed": 4,
+    "failed": 0,
+    "inconclusive": 0
+  },
+  "report_hash": "sha256:968bafff62fa0ea30d33518cbc318fcdbc3a04093660d46dc09f4852086697c8"
+}
