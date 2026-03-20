@@ -1021,7 +1021,7 @@ TC-01 and TC-04 return 400. Response times drop from ~6s to under 50ms — rejec
 happens before deserialization starts.
 
 ## Live Session Screenshot
-<img width="1920" height="1200" alt="Screenshot_2026-03-19_11-54-58" src="https://github.com/user-attachments/assets/3b6c7a46-b705-4713-a187-5a11d34606f9" />
+<img width="1920" height="1200" alt="Screenshot_2026-03-19_11-54-58" src="https://github.com/itsme-rk/remcheck/blob/b66c62b5b41fdc74416baad6dec181f3a273910c/evidence/LIVE%20SCREENSHOT" />
 
  
 ---
