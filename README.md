@@ -42,7 +42,13 @@ challenge-4/
 ├── README.md
 ├── REPORT.md
 ├── prompts.md
-├── architecture.md ----> (Default Challenge documentation)
+├── remcheck/
+     ├──src/
+     ├  └──remcheck.py
+     └──finding_examples/
+        └──sqli_example.json
+        └──ssrf_example.json
+      ├──architecture.md
 ├── finding_examples/
 │   └── deserial_example.json
 ├── src/
