@@ -1117,11 +1117,6 @@ but does not execute real gadget chains.
  
 - Build a real vulnerable Java server using Spring Boot with outdated Commons
   Collections, enabling genuine gadget chain execution and real OOB callbacks
-- Set up Interactsh as a live canary platform
-- Implement all 10 test cases from Part B
-- Fix AI rate limiting with async batching
-- Build a real vulnerable Java server using Spring Boot with intentionally outdated
-  Commons Collections, enabling genuine gadget chain execution and real OOB callbacks
 - Set up Interactsh as a live canary platform for DNS and HTTP callback detection
 - Implement all 10 test cases from Part B in the automated suite
 - Fix the AI analysis to handle rate limits with async batching rather than a fallback
